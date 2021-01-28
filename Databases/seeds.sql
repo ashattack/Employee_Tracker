@@ -32,4 +32,5 @@ VALUES
     ('Malia', 'White', 6, 5),
     ('Sarah', 'Loud', 7, NULL),
     ('Tim', 'Allen', 8, 7);
+    
    
