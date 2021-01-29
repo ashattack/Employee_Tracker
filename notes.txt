@@ -1,0 +1,9 @@
+There needs to be view all employees by department and then prompts you
+with a question: which department would you like to see employees for? With a list of all departments
+(if you click sales it will only pull back employees from the sales deparment)
+
+There needs to be view all employees by manager which then
+prompts you with: which employee do you want to see direct reports for? 
+(if you click Nigel Thornberry it would pull back the employee: Tim Allen  )
+
+after update employee manager will be View all Roles,  Add Role ,Remove Role and View all deparment

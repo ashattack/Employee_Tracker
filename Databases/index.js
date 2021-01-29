@@ -10,6 +10,9 @@ class DB {
             "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name As department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id"
         );
     }
+    getRolesTable() {
+        return this.connection.query("SELECT * FROM role");
+    }
     findAllRoles() {
         return this.connection.query(
             "SELECT role.title, role.salary, department.name FROM role LEFT JOIN department on role.department_id = department.id"
@@ -20,12 +23,28 @@ class DB {
             "SELECT department.name FROM department "
         )
     }
-    addDepartment(deptName) {
+    addEmployee(firstName, lastName, roleId) {
         return this.connection.query(
-            `INSERT INTO department (name) VALUES ('${deptName}')`
+            `INSERT INTO employee (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', ${roleId})`
+        )
+    }
+    removeEmployee() {
+        return this.connection.query(
+
+        )
+    }
+    updateEmpRole() {
+        return this.connection.query(
+
+        )
+    }
+    updateEmpManager() {
+        return this.connection.query(
+
         )
     }
 }
+
 
 module.exports = new DB(connection)
 
