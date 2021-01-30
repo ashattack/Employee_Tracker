@@ -34,7 +34,7 @@ class DB {
     }
     addRole(RoleName, RoleSalary, department) {
         return this.connection.query(
-            `INSERT INTO employee (title, salary, department_id) VALUES ('${RoleName}', '${RoleSalary}', ${department})`
+            `INSERT INTO role (title, salary, department_id) VALUES ('${RoleName}', '${RoleSalary}', ${department})`
         )
     }
     addDepartment(departmentName) {

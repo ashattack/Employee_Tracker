@@ -183,7 +183,7 @@ async function addRole() {
     ])
     console.log(answers);
     const departmentId = department.filter(r => r.name == answers.department)[0].id;
-    db.addRole(answers.RoleName, answers.RoleSalary, departmentId)
+   await db.addRole(answers.RoleName, answers.RoleSalary, departmentId)
     db.findAllRoles().then((role) => {
         console.log("\n");
         console.table(role);
