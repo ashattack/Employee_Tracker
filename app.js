@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const logo = require('asciiart-logo');
 const db = require('./Databases')
 const process = require('process');
-const { removeEmployee, updateEmpRole, updateEmpManager } = require('./Databases');
+// const { removeEmployee, updateEmpRole, updateEmpManager } = require('./Databases');
 require("console.table");
 
 function init() {
@@ -35,17 +35,25 @@ async function loadMainMenu() {
                     value: "ADD_EMPLOYEE"
                 },
                 {
-                    name: "Remove Employee",
-                    value: "REMOVE_EMPLOYEE"
+                    name: "Add Role",
+                    value: "ADD_ROLE"
                 },
+                {
+                    name: "Add Department",
+                    value: "ADD_DEPARTMENT"
+                },
+                // {
+                //     name: "Remove Employee",
+                //     value: "REMOVE_EMPLOYEE"
+                // },
                 {
                     name: "Update Employee Role",
                     value: "UPDATE_EMPLOYEE_ROLE"
                 },
-                {
-                    name: "Update Employee Manager",
-                    value: "UPDATE_EMPLOYEE_MANAGER"
-                },
+                // {
+                //     name: "Update Employee Manager",
+                //     value: "UPDATE_EMPLOYEE_MANAGER"
+                // },
                 {
                     name: "Exit",
                     value: "EXIT"
@@ -70,6 +78,12 @@ function handleChoices(choices) {
             return;
         case "ADD_EMPLOYEE":
             addEmployee()
+            return;
+        case "ADD_ROLE":
+            addRole()
+            return;
+        case "ADD_DEPARTMENT":
+            addDepartment()
             return;
         case "REMOVE_EMPLOYEE":
             removeEmployee();
@@ -144,15 +158,90 @@ async function addEmployee() {
         loadMainMenu();
     })
 }
+async function addRole() {
+    const department = await db.getDepartmentTable()
+    console.log(department);
+    const department_titles = department.map(depart => depart.name)
+    const answers = await inquirer.prompt([
+        {
+            type: "input",
+            name: "RoleName",
+            message: "What is the role you would like to add?",
+
+        },
+        {
+            type: "input",
+            name: "RoleSalary",
+            message: "What is the roles salary?"
+        },
+        {
+            type: "list",
+            name: "department",
+            message: "What is your roles department?",
+            choices: department_titles
+        }
+    ])
+    console.log(answers);
+    const departmentId = department.filter(r => r.name == answers.department)[0].id;
+    db.addRole(answers.RoleName, answers.RoleSalary, departmentId)
+    db.findAllRoles().then((role) => {
+        console.log("\n");
+        console.table(role);
+        loadMainMenu();
+    })
+}
+async function addDepartment() {
+    const answers = await inquirer.prompt([
+        {
+            type: "input",
+            name: "departmentName",
+            message: "What is the name of the department you would like to add?",
+
+        },
+    ])
+    console.log(answers);
+    db.addDepartment(answers.departmentName)
+    db.findAllDepartments().then((department) => {
+        console.log("\n");
+        console.table(department);
+        loadMainMenu();
+    })
+}
 // async function removeEmployee() {
 //     const employees = await db.findAllEmployees()
 
 // }
 
-// async function updateEmpRole() {
+async function updateEmpRole() {
+    const roles = await db.getRolesTable()
+    console.log(roles);
+    const role_titles = roles.map(role => role.title)
 
+    const employees = await db.findAllEmployees()
+    console.log(employees);
+    const employee_names = employees.map(employee => `${employee.first_name} ${employee.last_name}`)
 
-// }
+    const answers = await inquirer.prompt([
+        {
+            type: "list",
+            name: "chooseEmp",
+            message: "Choose an employee",
+            choices: employee_names
+        },
+        {
+            type: "list",
+            name: "chooseRole",
+            message: "Choose role for employee",
+            choices: role_titles
+        }
+    ])
+
+    const roleId = roles.filter(r => r.title == answers.chooseRole)[0].id
+    const empId = employees.filter(e => `${e.first_name} ${e.last_name}` == answers.chooseEmp)[0].id
+
+    await db.updateEmpRole(empId, roleId)
+    loadMainMenu();
+}
 
 // async function updateEmpManager() {
 
